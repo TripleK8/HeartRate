@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Rate Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Heart Rate Calculator</h1>
+        <p>Calculate Maximum Heart Rate (MHR), Target Heart Rate (THR), and Heart Rate Zones for optimal training.</p>
+
+        <!-- MHR Calculation Section -->
+        <section>
+            <h2>Calculate Maximum Heart Rate (MHR)</h2>
+            <label for="age">Age:</label>
+            <input type="number" id="age" placeholder="Enter your age" required>
+
+            <button onclick="calculateMHR()">Calculate MHR</button>
+            <div id="mhrResult"></div>
+        </section>
+
+        <!-- THR Calculation Section -->
+        <section>
+            <h2>Calculate Target Heart Rate (THR)</h2>
+            <label for="percentage">Desired Intensity (%):</label>
+            <input type="number" id="percentage" placeholder="Enter intensity (e.g., 70)" required>
+            <button onclick="calculateTHR()">Calculate THR</button>
+            <div id="thrResult"></div>
+        </section>
+
+        <!-- THR with Karvonen Method -->
+        <section>
+            <h2>Calculate THR using Karvonen Method</h2>
+            <label for="rhr">Resting Heart Rate (RHR):</label>
+            <input type="number" id="rhr" placeholder="Enter RHR (in bpm)">
+            <label for="karvonenIntensity">Intensity Level (%):</label>
+            <input type="number" id="karvonenIntensity" placeholder="Enter intensity (e.g., 60)">
+            <button onclick="calculateKarvonenTHR()">Calculate Karvonen THR</button>
+            <div id="karvonenResult"></div>
+        </section>
+
+        <!-- Heart Rate Zones -->
+        <section>
+            <h2>Heart Rate Zones</h2>
+            <button onclick="displayHeartRateZones()">Display Zones</button>
+            <div id="zonesResult"></div>
+        </section>
+    </div>
+
+    <script>
+        function calculateMHR() {
+            const age = parseInt(document.getElementById('age').value);
+            const basicMHR = 220 - age;
+            const tanakaMHR = 208 - (0.7 * age);
+            document.getElementById('mhrResult').innerHTML = `
+                <strong>Basic MHR:</strong> ${basicMHR} bpm<br>
+                <strong>Tanaka MHR:</strong> ${tanakaMHR.toFixed(2)} bpm
+            `;
+        }
+
+        function calculateTHR() {
+            const age = parseInt(document.getElementById('age').value);
+            const percentage = parseFloat(document.getElementById('percentage').value) / 100;
+            const mhr = 220 - age;
+            const thr = mhr * percentage;
+            document.getElementById('thrResult').innerHTML = `Target Heart Rate: ${thr.toFixed(2)} bpm`;
+        }
+
+        function calculateKarvonenTHR() {
+            const age = parseInt(document.getElementById('age').value);
+            const rhr = parseInt(document.getElementById('rhr').value);
+            const intensity = parseFloat(document.getElementById('karvonenIntensity').value) / 100;
+            const mhr = 220 - age;
+            const thrKarvonen = ((mhr - rhr) * intensity) + rhr;
+            document.getElementById('karvonenResult').innerHTML = `Karvonen THR: ${thrKarvonen.toFixed(2)} bpm`;
+        }
+
+        function displayHeartRateZones() {
+            const age = parseInt(document.getElementById('age').value);
+            const mhr = 220 - age;
+            const zones = `
+                <strong>Zone 1:</strong> ${Math.round(mhr * 0.5)} - ${Math.round(mhr * 0.6)} bpm (Warm-up)<br>
+                <strong>Zone 2:</strong> ${Math.round(mhr * 0.6)} - ${Math.round(mhr * 0.7)} bpm (Fat Burn)<br>
+                <strong>Zone 3:</strong> ${Math.round(mhr * 0.7)} - ${Math.round(mhr * 0.8)} bpm (Aerobic)<br>
+                <strong>Zone 4:</strong> ${Math.round(mhr * 0.8)} - ${Math.round(mhr * 0.9)} bpm (Endurance)<br>
+                <strong>Zone 5:</strong> ${Math.round(mhr * 0.9)} - ${mhr} bpm (Max Effort)
+            `;
+            document.getElementById('zonesResult').innerHTML = zones;
+        }
+    </script>
+</body>
+</html>
+/* Basic Styling */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f7f9fc;
+}
+
+.container {
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h1, h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#zonesResult, #mhrResult, #thrResult, #karvonenResult {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+}
